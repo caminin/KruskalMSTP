@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct s_subset {
+	int father;
+	int value;
+	
+} subset;
 
 typedef struct s_vertice {
     int pox_x;
@@ -166,6 +171,8 @@ char** str_split(char* a_str, const char a_delim)
     return result;
 }
 
+
+
 void mysort(array_edges *my_edges,int nb_cote)
 {
 	for(int i=0;i<nb_cote;i++)
@@ -188,12 +195,71 @@ void display(array_edges *my_edges,int nb_cote)
 	}
 }
 
+int path_compression(subset *mysubset,unsigned i)
+{
+	if (mysubset[(int)i].father != i)
+		mysubset[(int)i].father = path_compression(mysubset, mysubset[(int)i].father);
+ 
+    return mysubset[(int)i].father;
+}
+
+void subset_union(subset* subsets, unsigned x, unsigned y)
+{
+	unsigned xroot = path_compression(subsets, x);
+	unsigned yroot = path_compression(subsets, y);
+ 
+    // Attach smaller rank tree under root of high rank tree
+    // (Union by Rank)
+    if (subsets[xroot].value < subsets[yroot].value)
+        subsets[xroot].father = yroot;
+    else if (subsets[xroot].value > subsets[yroot].value)
+        subsets[yroot].father = xroot;
+ 
+    // If ranks are same, then make one as root and increment
+    // its rank by one
+    else
+    {
+        subsets[yroot].father = xroot;
+        subsets[xroot].value++;
+    }
+}
+
 void kruskal(array_vertices *my_vertices,int nb_noeuds,array_edges *my_edges,int nb_cote)
 {
-	display(my_edges,nb_cote);
-	printf("J'ai fini\n");
 	mysort(my_edges,nb_cote);
-	display(my_edges,nb_cote);
+	array_edges msp;
+	msp.init_size(nb_cote-1);
+	int taille_msp=0;
+	int noeud_actuel=0;
+	subset *mysubset=(subset*)malloc(sizeof(subset)*nb_noeuds);
+	for(int i=0;i<nb_noeuds;i++)
+	{
+		mysubset[i].father=i;
+		mysubset[i].value=0;
+	}
+	
+	while(taille_msp < (nb_noeuds-1))
+	{
+		edge *actual_edge=my_edges->at(noeud_actuel);
+		noeud_actuel++;
+		
+		unsigned compressed_children=path_compression(mysubset,actual_edge->first_v);
+		unsigned compressed_father=path_compression(mysubset,actual_edge->second_v);
+		if(compressed_children != compressed_father)
+		{
+			msp.add_edge(actual_edge->first_v,actual_edge->second_v,actual_edge->cost,taille_msp);
+			taille_msp++;
+			subset_union(mysubset,compressed_children,compressed_father);
+		}
+	}
+	unsigned total_weight=0;
+	
+	for(unsigned nb=0;nb<taille_msp;nb++)
+	{
+		msp.at(nb)->display();
+		total_weight+=msp.at(nb)->cost;
+	}
+	printf("Le cout total est de %d\n",(int) total_weight);
 }
 
 void extractFile(char s[])
