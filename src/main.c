@@ -172,7 +172,7 @@ void mysort(array_edges *my_edges,int nb_cote)
 	{
 		for(int j=i;j<nb_cote;j++)
 		{
-			if(my_edges->at(i)->cost < my_edges->at(j)->cost)
+			if(my_edges->at(i)->cost > my_edges->at(j)->cost)
 			{
 				my_edges->swap(i,j);
 			}
