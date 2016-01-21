@@ -2,110 +2,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "vertice.h"
+#include "edge.h"
+#include "latex.h"
+
 typedef struct s_subset {
 	int father;
 	int value;
 	
 } subset;
-
-typedef struct s_vertice {
-    int pox_x;
-    int pox_y;
-    
-    void display(){
-	printf("mon vertice est en pos %d ; %d\n", pox_x, pox_y);
-    }
-}vertice;
-
-typedef struct s_edge {
-    int first_v;
-    int second_v;
-    float cost; // un double ne semble pas utile
-    
-    void display(){
-	printf("mon arc relie les sommets %d et %d avec un coût de %.3f\n", first_v, second_v, cost);
-    }
-}edge;
-
-typedef struct s_array_vertices {
-    unsigned nb_vertices;
-
-    vertice** vertices;
-    
-    void init_size(unsigned size){
-	nb_vertices = size;
-	vertices= (vertice**)malloc(size*(sizeof(vertice*)));
-    }
-    
-    void add_vertice(int x, int y, unsigned pos){
-	if (pos < nb_vertices){
-	    printf("DEBUG : SOMMET ajouté en position %u\n", pos);
-	    vertice* new_vertice= (vertice*)malloc(sizeof(vertice));
-	    new_vertice->pox_x = x;
-	    new_vertice->pox_y = y;
-	    vertices[pos]= new_vertice;
-	}
-	else {
-	    printf("ERROR : Position d'ajout du sommet supérieure au nombre d'éléments\n");
-	}
-    }
-    
-    vertice* at(unsigned pos){
-	if (pos < nb_vertices)
-	    return vertices[pos];
-	else return NULL;
-    }
-    
-}array_vertices;
-
-
-typedef struct s_array_edges{
-    unsigned nb_edges;
-
-    edge** edges;
-    
-    void init_size(unsigned size){
-	nb_edges = size;
-	edges= (edge**)malloc(size*(sizeof(edge*)));
-    }
-    
-    void swap(int i, int j)
-    {
-	    edge temp;
-	    temp.first_v=edges[i]->first_v;
-	    temp.second_v=edges[i]->second_v;
-	    temp.cost=edges[i]->cost;
-	    
-	    edges[i]->first_v=edges[j]->first_v;
-	    edges[i]->second_v=edges[j]->second_v;
-	    edges[i]->cost=edges[j]->cost;
-	    
-	    edges[j]->first_v=temp.first_v;
-	    edges[j]->second_v=temp.second_v;
-	    edges[j]->cost=temp.cost;
-    }
-    
-    void add_edge(int num_first, int num_second, float cost, unsigned pos){
-	if (pos < nb_edges){
-	    printf("DEBUG : EDGE ajouté en position %u\n", pos);
-	    edge* new_edge= (edge*)malloc(sizeof(edge));
-	    new_edge->first_v = num_first;
-	    new_edge->second_v = num_second;
-	    new_edge->cost = cost;
-	    edges[pos]= new_edge;
-	}
-	else {
-	    printf("ERROR : Position d'ajout de l'arc supérieure au nombre d'éléments\n");
-	}
-    }
-    
-    edge* at(unsigned pos){
-	if (pos < nb_edges)
-	    return edges[pos];
-	else return NULL;
-    }
-    
-}array_edges;
 
 int get_file_size(char *file_name)
 {
@@ -324,7 +229,48 @@ void extractFile(char s[])
 
 int main()
 {
-	char chaine[]="CHARLOT_Rodolphe.txt";
-	extractFile(chaine);
-	return 0;
+    // Initialisations
+    array_vertices my_vertices;
+    array_edges my_edges;
+    
+/*** 	TESTS	 ***/
+    /* Tests pour ajout */
+    
+    // Sommets
+    my_vertices.init_size(4);
+    my_vertices.add_vertice(1,0, 0);
+    my_vertices.add_vertice(1,1, 1);
+    my_vertices.add_vertice(0,1, 2);
+    my_vertices.add_vertice(0,0, 3);
+    
+    vertice* vert_tmp= my_vertices.at(0);
+    
+    if (vert_tmp != NULL) {
+	vert_tmp->display();
+    }
+    else { printf("VERTICE NULL"); }
+    
+    // Arcs
+    my_edges.init_size(5);
+    my_edges.add_edge(1,2, 3.14, 0);
+    my_edges.add_edge(1,3, 12, 1);
+    my_edges.add_edge(2,3, 3.5, 2);
+    my_edges.add_edge(2,4, 1.05, 3);
+    my_edges.add_edge(3,4, 2.8, 4);
+    
+    edge* edge_tmp= my_edges.at(0);
+    if (edge_tmp != NULL) {
+	edge_tmp->display();
+    }
+    else { printf("VERTICE NULL"); }
+    
+    /* Tests pour chargement fichier */
+// 	char chaine[]="CHARLOT_Rodolphe.txt";
+// 	extractFile(chaine);
+
+    /* Tests pour création fichier LATEX */
+    FILE* tex= fopen("exemple_feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
+    to_latex_pdf(my_vertices, my_edges, tex);
+    
+    return 0;
 }	

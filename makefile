@@ -1,6 +1,6 @@
 TARGET = prog.exe
 
-SRCS = main.c\
+SRCS = main.c latex.c\
 
 OBJ_DIR = ./obj
 SRC_DIR = ./src
