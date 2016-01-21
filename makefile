@@ -1,6 +1,6 @@
 TARGET = prog.exe
 
-SRCS = main.cpp\
+SRCS = main.c\
 
 OBJ_DIR = ./obj
 SRC_DIR = ./src
@@ -9,7 +9,7 @@ INC_DIR = ./include
 
 DEP_DIRS =
 
-OBJS = $(patsubst %.cpp, $(OBJ_DIR)/%.o, $(SRCS))
+OBJS = $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 SYS_LIBS = 
 
@@ -21,18 +21,18 @@ CXX = g++
 
 .PHONY: all clean fclean
 
-debug: CPPFLAGS += -DDEBUG
+debug: CFLAGS += -DDEBUG
 debug: CXXFLAGS += -g
 debug: LDFLAGS += -g
 debug: all
 
-release: CPPFLAGS += -O2
+release: CFLAGS += -O2
 release: all
 
 all: $(TARGET)
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CXX) $(CXXFLAGS) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(BIN_DIR)/$(TARGET)
 
