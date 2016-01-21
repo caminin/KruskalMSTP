@@ -1,6 +1,6 @@
 TARGET = prog.exe
 
-SRCS = main.c latex.c\
+SRCS = main.c edge.c vertice.c latex.c\
 
 OBJ_DIR = ./obj
 SRC_DIR = ./src
@@ -16,7 +16,7 @@ SYS_LIBS =
 INCLUDES = -I$(INC_DIR) $(addprefix -I, $(DEP_DIRS))
 LDLIBS = $(addprefix -l, $(SYS_LIBS))
 LDFLAGS = -W -Wall
-# CXX = gcc
+CXX = gcc
 
 .PHONY: all clean fclean
 

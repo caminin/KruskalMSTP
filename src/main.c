@@ -9,7 +9,6 @@
 typedef struct s_subset {
 	int father;
 	int value;
-	
 } subset;
 
 int get_file_size(char *file_name)
@@ -21,11 +20,11 @@ int get_file_size(char *file_name)
       fprintf(stderr, "Cannot open %s.\n", file_name);
       return(file_size);
    }
-   char ligne[20];
-   while(fgets(ligne, sizeof(char)*50,fp) != NULL)
-	{
-		file_size++;
-	}
+   char ligne[30];
+   while(fgets(ligne, 30,fp) != NULL)
+    {
+	    file_size++;
+    }
    fclose(fp);
    return(file_size);
 }
@@ -76,27 +75,19 @@ char** str_split(char* a_str, const char a_delim)
     return result;
 }
 
-
-
 void mysort(array_edges *my_edges,int nb_cote)
 {
-	for(int i=0;i<nb_cote;i++)
+	int i;
+	for(i=0;i<nb_cote;i++)
 	{
-		for(int j=i;j<nb_cote;j++)
+		int j;
+		for(j=i;j<nb_cote;j++)
 		{
-			if(my_edges->at(i)->cost > my_edges->at(j)->cost)
+			if(get_edge(*my_edges, i)->cost > get_edge(*my_edges, j)->cost)
 			{
-				my_edges->swap(i,j);
+				swap(*my_edges, i,j);
 			}
 		}
-	}
-}
-
-void display(array_edges *my_edges,int nb_cote)
-{
-	for(int i=0;i<nb_cote;i++)
-	{
-		printf("%d de coordonnes : %d et %d \n",(int)(my_edges->at(i))->cost,(int)(my_edges->at(i))->first_v,(int)(my_edges->at(i))->second_v);
 	}
 }
 
@@ -132,37 +123,40 @@ void subset_union(subset* subsets, unsigned x, unsigned y)
 void kruskal(array_vertices *my_vertices,int nb_noeuds,array_edges *my_edges,int nb_cote)
 {
 	mysort(my_edges,nb_cote);
-	array_edges msp;
-	msp.init_size(nb_cote-1);
-	int taille_msp=0;
+	array_edges mst;
+	init_size_edges(&mst, nb_cote-1);
+	int taille_mst=0;
 	int noeud_actuel=0;
 	subset *mysubset=(subset*)malloc(sizeof(subset)*nb_noeuds);
-	for(int i=0;i<nb_noeuds;i++)
+	int i;
+	for(i=0;i<nb_noeuds;i++)
 	{
 		mysubset[i].father=i;
 		mysubset[i].value=0;
 	}
 	
-	while(taille_msp < (nb_noeuds-1))
+	while(taille_mst < (nb_noeuds-1))
 	{
-		edge *actual_edge=my_edges->at(noeud_actuel);
+		edge *actual_edge=get_edge(*my_edges, noeud_actuel);
 		noeud_actuel++;
 		
 		unsigned compressed_children=path_compression(mysubset,actual_edge->first_v);
 		unsigned compressed_father=path_compression(mysubset,actual_edge->second_v);
 		if(compressed_children != compressed_father)
 		{
-			msp.add_edge(actual_edge->first_v,actual_edge->second_v,actual_edge->cost,taille_msp);
-			taille_msp++;
+			add_edge(&mst, actual_edge->first_v,actual_edge->second_v,actual_edge->cost,taille_mst);
+			taille_mst++;
 			subset_union(mysubset,compressed_children,compressed_father);
 		}
 	}
-	unsigned total_weight=0;
+	free(mysubset);
 	
-	for(unsigned nb=0;nb<taille_msp;nb++)
+	unsigned total_weight=0;
+	unsigned nb;
+	for(nb=0;nb<taille_mst;nb++)
 	{
-		msp.at(nb)->display();
-		total_weight+=msp.at(nb)->cost;
+		display_edge(*(get_edge(mst, nb)));
+		total_weight+=(get_edge(mst, nb))->cost;
 	}
 	printf("Le cout total est de %d\n",(int) total_weight);
 }
@@ -179,11 +173,12 @@ void extractFile(char s[])
 	if (fichier != NULL)
 	{		
 		char ** text=(char**)malloc(sizeof(char*)*taille);
-		char ligne[20];
+		char ligne[30];
 		int num_ligne=0;
-		while(fgets(ligne, sizeof(char)*50,fichier) != NULL)
+		while(fgets(ligne, 30,fichier) != NULL)
 		{
-			text[num_ligne]=(char*)malloc(sizeof(char)*strlen(ligne));
+			printf("DEBUG : num_ligne : %d/%d\n", num_ligne, taille);
+			text[num_ligne]=(char*)malloc(sizeof(char)*(strlen(ligne)+1));
 			strcpy(text[num_ligne],ligne);
 			printf("%s",text[num_ligne]);
 			num_ligne++;
@@ -192,32 +187,39 @@ void extractFile(char s[])
 		
 		char **ligne1=str_split(text[0],' ');
 		int nb_noeuds=atoi(ligne1[0]);
-		my_vertices.init_size(nb_noeuds);
+		init_size_vertices(&my_vertices, nb_noeuds);
 		
 		int nb_cote=atoi(ligne1[1]);
-		my_edges.init_size(nb_cote);
+		init_size_edges(&my_edges, nb_cote);
 		
-		for(int i=1;i<nb_noeuds+1;i++)
+		free(ligne1);
+		
+		int i;
+		for(i=1;i<nb_noeuds+1;i++)
 		{
 			char **ligne1=str_split(text[i],' ');
 			int coord_x=atoi(ligne1[0]);
 			int coord_y=atoi(ligne1[1]);
 			
-			my_vertices.add_vertice(coord_x,coord_y,i-1);
+			add_vertice(&my_vertices, coord_x,coord_y,i-1);
+			free(ligne1);
 		}
 		
-		for(int i=nb_noeuds+1;i<nb_noeuds+nb_cote+1;i++)
+		for(;i<nb_noeuds+nb_cote+1;i++)
 		{
 			char **ligne1=str_split(text[i],' ');
 			int coord_x=atoi(ligne1[0]);
 			int coord_y=atoi(ligne1[1]);
 			long valeur=atof(ligne1[2]);
 			
-			my_edges.add_edge(coord_x,coord_y, valeur,i-nb_noeuds-1);
+			add_edge(&my_edges, coord_x,coord_y, valeur,i-nb_noeuds-1);
+			free(ligne1);
 		}
 		
-		kruskal(&my_vertices,nb_noeuds,&my_edges,nb_cote);
+		for (i=1; i<126; ++i) free(text[i]);
+		free(text);
 		
+// 		kruskal(&my_vertices,nb_noeuds,&my_edges,nb_cote);
 	}
 	else
 	{
@@ -230,47 +232,18 @@ void extractFile(char s[])
 int main()
 {
     // Initialisations
-    array_vertices my_vertices;
-    array_edges my_edges;
+//     array_vertices my_vertices;
+//     array_edges my_edges;
     
 /*** 	TESTS	 ***/
-    /* Tests pour ajout */
-    
-    // Sommets
-    my_vertices.init_size(4);
-    my_vertices.add_vertice(1,0, 0);
-    my_vertices.add_vertice(1,1, 1);
-    my_vertices.add_vertice(0,1, 2);
-    my_vertices.add_vertice(0,0, 3);
-    
-    vertice* vert_tmp= my_vertices.at(0);
-    
-    if (vert_tmp != NULL) {
-	vert_tmp->display();
-    }
-    else { printf("VERTICE NULL"); }
-    
-    // Arcs
-    my_edges.init_size(5);
-    my_edges.add_edge(1,2, 3.14, 0);
-    my_edges.add_edge(1,3, 12, 1);
-    my_edges.add_edge(2,3, 3.5, 2);
-    my_edges.add_edge(2,4, 1.05, 3);
-    my_edges.add_edge(3,4, 2.8, 4);
-    
-    edge* edge_tmp= my_edges.at(0);
-    if (edge_tmp != NULL) {
-	edge_tmp->display();
-    }
-    else { printf("VERTICE NULL"); }
-    
+
     /* Tests pour chargement fichier */
-// 	char chaine[]="CHARLOT_Rodolphe.txt";
-// 	extractFile(chaine);
+    char chaine[]="DAVID_Florian.txt";
+    extractFile(chaine);
 
     /* Tests pour création fichier LATEX */
-    FILE* tex= fopen("exemple_feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
-    to_latex_pdf(my_vertices, my_edges, tex);
+//     FILE* tex= fopen("feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
+//     to_latex_pdf(my_vertices, my_edges, tex);
     
     return 0;
 }	

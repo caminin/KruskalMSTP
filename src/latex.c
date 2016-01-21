@@ -1,31 +1,34 @@
-#include "edge.h"
-#include "vertice.h"
+#include "latex.h"
 
-#define VERTICE_SPACE 0.22cm
+#define CIRCLE_RADIUS "1.0cm"
+#define COEF_SIZE 5
+#define SCALING "0.7"
+
 char to_latex(array_vertices vertices, array_edges edges, FILE* file){
 // 	file= fopen(filename,"w");
 	
 	if (file != NULL)
 	{
-	    fprintf(file, "\\begin{pspicture*}(0,0)(50,50)\n");
+	    fprintf(file, "\\begin{pspicture*}(-1,-1)(15,15)\n");
 	    // Vertices export
 	    fprintf(file, "%% vertices\n");
-	    for (int i= 0; i < vertices.nb_vertices; ++i){
-		vertice* v= vertices.at(i);
+	    int i;
+	    for (i= 0; i < vertices.nb_vertices; ++i){
+		vertice* v= get_vertice(vertices, i);
 		// Positioning of the vertice
-		fprintf(file, "\\cnode(%d,%d)", v->pox_x, v->pox_y);
+		fprintf(file, "\\cnode(%d,%d)", COEF_SIZE * v->pos_x, COEF_SIZE *v->pos_y);
 		// Size and number of the vertice
-		fprintf(file, "{VERTICE_SPACE}{%d}", i+1);
-		// TODO ??? que fait \rput, identique à \cnode
-		fprintf(file, "\\rput(%d,%d)", v->pox_x, v->pox_y);
-		// TODO ??? que fait \tt, identique à au numéro
+		fprintf(file, "{%s}{%d}", CIRCLE_RADIUS, i+1);
+		// TODO Number positioning
+		fprintf(file, "\\rput(%d,%d)", COEF_SIZE *v->pos_x, COEF_SIZE *v->pos_y);
+		// TODO Number display
 		fprintf(file, "{\\tt %d}\n", i+1);
 	    }
 	    
 	    // Edges export
 	    fprintf(file, "%% edges\n");
-	    for (int i= 0; i < edges.nb_edges; ++i){
-		edge* e= edges.at(i);
+	    for (i= 0; i < edges.nb_edges; ++i){
+		edge* e= get_edge(edges, i);
 		// Edges drawing TODO que fait le {-} ?
 		fprintf(file, "\\ncline{-}{%d}{%d}\n", e->first_v, e->second_v);
 		/// The cost of each edges is not displayed
@@ -45,7 +48,7 @@ char to_latex(array_vertices vertices, array_edges edges, FILE* file){
 	}
 }
 
-#define MARGE 2cm
+#define MARGE "2cm"
 void to_latex_pdf(array_vertices vertices, array_edges edges, FILE* file)
 {
 //     FILE* file= fopen(filename,"w");
@@ -53,14 +56,16 @@ void to_latex_pdf(array_vertices vertices, array_edges edges, FILE* file)
     if (file != NULL)
     {
 	fprintf(file, "\\documentclass{article}\n\\usepackage{pstricks}\n\\usepackage{pst-node}");
-	fprintf(file, "\n\\usepackage[top=MARGE, bottom=MARGE, left=MARGE, right=MARGE]{geometry}\n");
+	fprintf(file, "\n\\usepackage[top=%s, bottom=%s, left=%s, right=%s]{geometry}\n", MARGE, MARGE, MARGE, MARGE);
+	fprintf(file, "\\usepackage{graphics}\n");
+	
 	// TODO voir comment mettre le nom du fichier LATEX
-	fprintf(file, "\\begin{document}\n\\centering \\large{\\tt %s}\n", "exemple_feuille.tex");
-	fprintf(file, "pscalebox{0.25}{\n%% BEGIN GRAPHE\n");
+	fprintf(file, "\\begin{document}\n\\centering \\large{\\tt %s}\n", "feuille.tex");
+	fprintf(file, "\\scalebox{%s}{\n%% BEGIN GRAPHE\n", SCALING);
 	
 	to_latex(vertices, edges, file);
 	
-	fprintf(file, "}%% END GRAPHE\n\n\\end{document}");
+	fprintf(file, "\n}%% END GRAPHE\n\n\\end{document}");
 	
 	// File closed
 	fclose(file);
