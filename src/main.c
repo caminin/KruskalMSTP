@@ -6,6 +6,11 @@
 #include "edge.h"
 #include "latex.h"
 
+typedef struct s_graphe{
+    array_vertices vertices;
+    array_edges edges;
+}Graphe;
+
 typedef struct s_subset {
 	int father;
 	int value;
@@ -120,31 +125,34 @@ void subset_union(subset* subsets, unsigned x, unsigned y)
     }
 }
 
-void kruskal(array_vertices *my_vertices,int nb_noeuds,array_edges *my_edges,int nb_cote)
+array_edges* kruskal(Graphe *graphe)
 {
-	mysort(my_edges,nb_cote);
-	array_edges mst;
-	init_size_edges(&mst, nb_cote-1);
+	int nb_vertices= graphe->vertices.nb_vertices;
+	int nb_edges= graphe->edges.nb_edges;
+	
+	mysort(&(graphe->edges), nb_edges);
+	array_edges* mst;
+	init_size_edges(mst, nb_edges-1);
 	int taille_mst=0;
 	int noeud_actuel=0;
-	subset *mysubset=(subset*)malloc(sizeof(subset)*nb_noeuds);
+	subset *mysubset=(subset*)malloc(sizeof(subset)*nb_vertices);
 	int i;
-	for(i=0;i<nb_noeuds;i++)
+	for(i=0;i<nb_vertices;i++)
 	{
 		mysubset[i].father=i;
 		mysubset[i].value=0;
 	}
 	
-	while(taille_mst < (nb_noeuds-1))
+	while(taille_mst < (nb_vertices-1))
 	{
-		edge *actual_edge=get_edge(*my_edges, noeud_actuel);
+		edge *actual_edge=get_edge(graphe->edges, noeud_actuel);
 		noeud_actuel++;
 		
 		unsigned compressed_children=path_compression(mysubset,actual_edge->first_v);
 		unsigned compressed_father=path_compression(mysubset,actual_edge->second_v);
 		if(compressed_children != compressed_father)
 		{
-			add_edge(&mst, actual_edge->first_v,actual_edge->second_v,actual_edge->cost,taille_mst);
+			add_edge(mst, actual_edge->first_v,actual_edge->second_v,actual_edge->cost,taille_mst);
 			taille_mst++;
 			subset_union(mysubset,compressed_children,compressed_father);
 		}
@@ -155,20 +163,21 @@ void kruskal(array_vertices *my_vertices,int nb_noeuds,array_edges *my_edges,int
 	unsigned nb;
 	for(nb=0;nb<taille_mst;nb++)
 	{
-		display_edge(*(get_edge(mst, nb)));
-		total_weight+=(get_edge(mst, nb))->cost;
+		display_edge(*(get_edge(*mst, nb)));
+		total_weight+=(get_edge(*mst, nb))->cost;
 	}
 	printf("Le cout total est de %d\n",(int) total_weight);
+	
+	return mst;
 }
 
-void extractFile(char s[])
+Graphe* extractFile(char s[])
 {
 	int taille=get_file_size(s);	
 	FILE *fichier;
 	fichier=fopen(s,"r");
 	
-	array_vertices my_vertices;
-	array_edges my_edges;
+	Graphe* graphe= (Graphe*)malloc(sizeof(Graphe));
 	
 	if (fichier != NULL)
 	{		
@@ -187,10 +196,10 @@ void extractFile(char s[])
 		
 		char **ligne1=str_split(text[0],' ');
 		int nb_noeuds=atoi(ligne1[0]);
-		init_size_vertices(&my_vertices, nb_noeuds);
+		init_size_vertices(&(graphe->vertices), nb_noeuds);
 		
 		int nb_cote=atoi(ligne1[1]);
-		init_size_edges(&my_edges, nb_cote);
+		init_size_edges(&(graphe->edges), nb_cote);
 		
 		free(ligne1);
 		
@@ -201,7 +210,7 @@ void extractFile(char s[])
 			int coord_x=atoi(ligne1[0]);
 			int coord_y=atoi(ligne1[1]);
 			
-			add_vertice(&my_vertices, coord_x,coord_y,i-1);
+			add_vertice(&(graphe->vertices), coord_x,coord_y,i-1);
 			free(ligne1);
 		}
 		
@@ -212,21 +221,19 @@ void extractFile(char s[])
 			int coord_y=atoi(ligne1[1]);
 			long valeur=atof(ligne1[2]);
 			
-			add_edge(&my_edges, coord_x,coord_y, valeur,i-nb_noeuds-1);
+			add_edge(&(graphe->edges), coord_x,coord_y, valeur,i-nb_noeuds-1);
 			free(ligne1);
 		}
 		
 		for (i=0; i<126; ++i) free(text[i]);
 		free(text);
-		
-// 		kruskal(&my_vertices,nb_noeuds,&my_edges,nb_cote);
 	}
 	else
 	{
 	  // On affiche un message d'erreur si on veut
 	  printf("Impossible d'ouvrir le fichier \n");
 	}
-	
+	return graphe;
 }
 
 int main()
@@ -239,11 +246,16 @@ int main()
 
     /* Tests pour chargement fichier */
     char chaine[]="DAVID_Florian.txt";
-    extractFile(chaine);
+    Graphe* g= extractFile(chaine);
+    
+//     array_edges* mst_kruskal= kruskal(g);
 
     /* Tests pour création fichier LATEX */
 //     FILE* tex= fopen("feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
 //     to_latex_pdf(my_vertices, my_edges, tex);
+    
+    
+    free(g);
     
     return 0;
 }	
