@@ -34,7 +34,7 @@ typedef struct s_array_vertices {
     
     void add_vertice(int x, int y, unsigned pos){
 	if (pos < nb_vertices){
-	    printf("DEBUG : Element ajouté en position %u\n", pos);
+	    printf("DEBUG : SOMMET ajouté en position %u\n", pos);
 	    vertice* new_vertice= (vertice*)malloc(sizeof(vertice));
 	    new_vertice->pox_x = x;
 	    new_vertice->pox_y = y;
@@ -64,9 +64,25 @@ typedef struct s_array_edges{
 	edges= (edge**)malloc(size*(sizeof(edge*)));
     }
     
+    void swap(int i, int j)
+    {
+	    edge temp;
+	    temp.first_v=edges[i]->first_v;
+	    temp.second_v=edges[i]->second_v;
+	    temp.cost=edges[i]->cost;
+	    
+	    edges[i]->first_v=edges[j]->first_v;
+	    edges[i]->second_v=edges[j]->second_v;
+	    edges[i]->cost=edges[j]->cost;
+	    
+	    edges[j]->first_v=temp.first_v;
+	    edges[j]->second_v=temp.second_v;
+	    edges[j]->cost=temp.cost;
+    }
+    
     void add_edge(int num_first, int num_second, float cost, unsigned pos){
 	if (pos < nb_edges){
-	    printf("DEBUG : Element ajouté en position %u\n", pos);
+	    printf("DEBUG : EDGE ajouté en position %u\n", pos);
 	    edge* new_edge= (edge*)malloc(sizeof(edge));
 	    new_edge->first_v = num_first;
 	    new_edge->second_v = num_second;
@@ -150,11 +166,44 @@ char** str_split(char* a_str, const char a_delim)
     return result;
 }
 
+void mysort(array_edges *my_edges,int nb_cote)
+{
+	for(int i=0;i<nb_cote;i++)
+	{
+		for(int j=i;j<nb_cote;j++)
+		{
+			if(my_edges->at(i)->cost < my_edges->at(j)->cost)
+			{
+				my_edges->swap(i,j);
+			}
+		}
+	}
+}
+
+void display(array_edges *my_edges,int nb_cote)
+{
+	for(int i=0;i<nb_cote;i++)
+	{
+		printf("%d de coordonnes : %d et %d \n",(int)(my_edges->at(i))->cost,(int)(my_edges->at(i))->first_v,(int)(my_edges->at(i))->second_v);
+	}
+}
+
+void kruskal(array_vertices *my_vertices,int nb_noeuds,array_edges *my_edges,int nb_cote)
+{
+	display(my_edges,nb_cote);
+	printf("J'ai fini\n");
+	mysort(my_edges,nb_cote);
+	display(my_edges,nb_cote);
+}
+
 void extractFile(char s[])
 {
 	int taille=get_file_size(s);	
 	FILE *fichier;
 	fichier=fopen(s,"r");
+	
+	array_vertices my_vertices;
+	array_edges my_edges;
 	
 	if (fichier != NULL)
 	{		
@@ -172,9 +221,32 @@ void extractFile(char s[])
 		
 		char **ligne1=str_split(text[0],' ');
 		int nb_noeuds=atoi(ligne1[0]);
-		int nb_cote=atoi(ligne1[1]);
+		my_vertices.init_size(nb_noeuds);
 		
-		printf("%d, %d",nb_noeuds,nb_cote);
+		int nb_cote=atoi(ligne1[1]);
+		my_edges.init_size(nb_cote);
+		
+		for(int i=1;i<nb_noeuds+1;i++)
+		{
+			char **ligne1=str_split(text[i],' ');
+			int coord_x=atoi(ligne1[0]);
+			int coord_y=atoi(ligne1[1]);
+			
+			my_vertices.add_vertice(coord_x,coord_y,i-1);
+		}
+		
+		for(int i=nb_noeuds+1;i<nb_noeuds+nb_cote+1;i++)
+		{
+			char **ligne1=str_split(text[i],' ');
+			int coord_x=atoi(ligne1[0]);
+			int coord_y=atoi(ligne1[1]);
+			long valeur=atof(ligne1[2]);
+			
+			my_edges.add_edge(coord_x,coord_y, valeur,i-nb_noeuds-1);
+		}
+		
+		kruskal(&my_vertices,nb_noeuds,&my_edges,nb_cote);
+		
 	}
 	else
 	{
@@ -182,33 +254,10 @@ void extractFile(char s[])
 	  printf("Impossible d'ouvrir le fichier \n");
 	}
 	
-	
 }
 
 int main()
 {
-	array_vertices my_vertices;
-    my_vertices.init_size(10);
-    my_vertices.add_vertice(1,2,0);
-    
-    vertice* vert_tmp= my_vertices.at(0);
-    
-    if (vert_tmp != NULL) {
-	vert_tmp->display();
-    }
-    else { printf("VERTICE NULL"); }
-    
-    array_edges my_edges;
-    my_edges.init_size(10);
-    my_edges.add_edge(1,2, 2.5,0);
-    
-    
-    edge* edge_tmp= my_edges.at(0);
-    if (edge_tmp != NULL) {
-	edge_tmp->display();
-    }
-    else { printf("VERTICE NULL"); }
-    
 	char chaine[]="CHARLOT_Rodolphe.txt";
 	extractFile(chaine);
 	return 0;
