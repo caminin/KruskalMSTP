@@ -216,7 +216,7 @@ void extractFile(char s[])
 			free(ligne1);
 		}
 		
-		for (i=1; i<126; ++i) free(text[i]);
+		for (i=0; i<126; ++i) free(text[i]);
 		free(text);
 		
 // 		kruskal(&my_vertices,nb_noeuds,&my_edges,nb_cote);
