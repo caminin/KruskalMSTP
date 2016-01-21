@@ -1,0 +1,4 @@
+[Project]
+Name=KruskalMSTP
+Manager=KDevCustomMakeManager
+VersionControl=kdevgit
