@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "../include/graphe.h"
 #include "../include/latex.h"
 #include "../include/file.h"
 
@@ -33,27 +34,19 @@ char* parseCommandLine(int argc, char**argv)
 
 int main(int argc, char**argv)
 {
-	
 #ifdef FLORIAN
-    // Initialisations
-//     array_vertices my_vertices;
-//     array_edges my_edges;
-    
-/*** 	TESTS	 ***/
-
-    /* Tests pour chargement fichier */
-    char chaine[]="./txtfiles/DAVID_Florian.txt";
+    char chaine[]="./txtfiles/RAYER_Ugo.txt";
     Graphe* g= extractFile(chaine);
     
+    // LATEX
+    FILE* tex= fopen("feuille.tex", "w");
     
-//     array_edges* mst_kruskal= kruskal(g);
-
-    /* Tests pour création fichier LATEX */
-    FILE* tex= fopen("feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
-//     to_latex_pdf(my_vertices, my_edges, tex);
-    to_latex_pdf(g->vertices, g->edges, tex);
+    array_edges* mst=kruskal(g);
     
     delete_edges(&(g->edges));
+    g->edges= *mst;
+    MST_to_latex_pdf(g, tex);
+    
     delete_vertices(&(g->vertices));
     free(g);
 #endif
