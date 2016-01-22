@@ -1,6 +1,7 @@
 #ifndef VERTICE_H
 #define VERTICE_H
 
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -10,13 +11,13 @@ typedef struct s_vertice {
 }vertice;
 
 typedef struct s_array_vertices {
-    unsigned nb_vertices;
+    int nb_vertices;
     vertice** vertices;    
 }array_vertices;
 
 void display_vertice(vertice v);
-void init_size_vertices(array_vertices* av, unsigned size);
-void add_vertice(array_vertices* av, int x, int y, unsigned pos);
-vertice* get_vertice(array_vertices av, unsigned pos);
+void init_size_vertices(array_vertices* av, int size);
+void add_vertice(array_vertices* av, int x, int y, int pos);
+vertice* get_vertice(array_vertices av, int pos);
 
 #endif // VERTICE_H

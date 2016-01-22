@@ -4,6 +4,8 @@ SRCS = main.c\
 		 edge.c\
 		 vertice.c\
 		 latex.c\
+		 kruskal.c\
+		 file.c\
 
 OBJ_DIR = ./obj
 SRC_DIR = ./src
@@ -54,4 +56,10 @@ clean:
 
 fclean: clean
 	$(RM) $(BIN_DIR)/$(TARGET)
+	
+rodolphe: CFLAGS += -DRODOLPHE
+rodolphe: clean debug
+
+florian: CFLAGS += -DFLORIAN
+florian: clean debug
 
