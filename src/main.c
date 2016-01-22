@@ -324,7 +324,7 @@ void extractFile(char s[])
 
 int main()
 {
-	char chaine[]="CHARLOT_Rodolphe.txt";
+	char chaine[]="txtfiles/KLIMEK_Guillaume.txt";
 	extractFile(chaine);
 	return 0;
 }	
