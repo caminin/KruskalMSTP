@@ -6,6 +6,7 @@
 
 #include "vertice.h"
 #include "edge.h"
+#include "graphe.h"
 
 // TODO Florian : Penser à pscalebox {/*LATEX*/}
 #define VERTICE_SPACE 0.22cm

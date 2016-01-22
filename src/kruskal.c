@@ -1,6 +1,5 @@
 #include "../include/kruskal.h"
 
-
 int path_compression(subset mysubset[],int i)
 {
 	if (mysubset[i].father != i)
@@ -9,8 +8,6 @@ int path_compression(subset mysubset[],int i)
 	}
 	return mysubset[i].father;
 }
-
-
 
 void subset_union(subset* subsets, int x, int y)
 {
@@ -79,6 +76,3 @@ array_edges* kruskal(Graphe *graphe)
 	
 	return mst;
 }
-
-
-
