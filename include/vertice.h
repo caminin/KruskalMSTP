@@ -19,5 +19,6 @@ void display_vertice(vertice v);
 void init_size_vertices(array_vertices* av, int size);
 void add_vertice(array_vertices* av, int x, int y, int pos);
 vertice* get_vertice(array_vertices av, int pos);
+void delete_vertices(array_vertices* av);
 
 #endif // VERTICE_H

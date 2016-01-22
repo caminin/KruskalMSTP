@@ -28,5 +28,6 @@ void add_edge(array_edges*, int num_first, int num_second, float cost, int pos);
 edge* get_edge(array_edges, int pos);
 void display_edges(array_edges *my_edges,int nb_egdes);
 void mysort(array_edges *my_edges,int nb_cote);
+void delete_edges(array_edges* ae);
 
 #endif // EDGE_H

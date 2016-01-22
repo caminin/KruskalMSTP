@@ -20,18 +20,20 @@ int main()
     char chaine[]="./txtfiles/DAVID_Florian.txt";
     Graphe* g= extractFile(chaine);
     
+    
 //     array_edges* mst_kruskal= kruskal(g);
 
     /* Tests pour création fichier LATEX */
-//     FILE* tex= fopen("feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
-//     to_latex_pdf(my_vertices, my_edges, tex);   
+    FILE* tex= fopen("feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
+//     to_latex_pdf(my_vertices, my_edges, tex);
+    to_latex_pdf(g->vertices, g->edges, tex);
     
+    delete_edges(&(g->edges));
+    delete_vertices(&(g->vertices));
     free(g);
 #endif
 
 #ifdef RODOLPHE
-	sprintf(stderr,"plop\n");
-	
 	char chaine[]="./txtfiles/GARNIER_Antoine.txt";
     Graphe* g= extractFile(chaine);
     array_edges* mst=kruskal(g);
