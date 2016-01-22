@@ -5,8 +5,33 @@
 #include "../include/latex.h"
 #include "../include/file.h"
 
+char* parseCommandLine(int argc, char**argv)
+{
+	if(argc>1)
+	{
+		int i=0;
+		char nom[strlen(argv[1])+1];
+		for(i=0;i<strlen(argv[1]);i++)
+		{
+			nom[i]=argv[1][i];
+		}
+		nom[strlen(argv[1])]='\0';
+		char prefix[]="./txtfiles/";
+		char suffixe[]=".txt";
+		int taille_chaine=strlen(prefix)+strlen(suffixe)+strlen(nom);
+		char *chaine=(char*)malloc(sizeof(char)*taille_chaine);
+		strcat(chaine,prefix);
+		strcat(chaine,nom);
+		strcat(chaine,suffixe);
+		return chaine;
+	}
+	else
+	{
+		return NULL;
+	}
+}
 
-int main()
+int main(int argc, char**argv)
 {
 	
 #ifdef FLORIAN
@@ -34,8 +59,8 @@ int main()
 #endif
 
 #ifdef RODOLPHE
-	char chaine[]="./txtfiles/GARNIER_Antoine.txt";
-    Graphe* g= extractFile(chaine);
+	
+    Graphe* g= extractFile(parseCommandLine(argc,argv));
     array_edges* mst=kruskal(g);
 #endif
     
