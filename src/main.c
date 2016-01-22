@@ -252,9 +252,8 @@ int main()
 //     array_edges* mst_kruskal= kruskal(g);
 
     /* Tests pour création fichier LATEX */
-    FILE* tex= fopen("feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
-//     to_latex_pdf(my_vertices, my_edges, tex);
-    to_latex_pdf(g->vertices, g->edges, tex);
+    FILE* tex= fopen("feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/    
+    full_graphe_to_latex_pdf(g, tex);
     
     delete_edges(&(g->edges));
     delete_vertices(&(g->vertices));
