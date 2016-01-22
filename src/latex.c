@@ -84,7 +84,14 @@ void graphe_to_latex_pdf(Graphe* graphe, FILE* file, void (*func_to_latex)(Graph
 	fprintf(file, "\\usepackage{graphics}\n");
 	
 	// TODO voir comment mettre le nom du fichier LATEX
-	fprintf(file, "\\begin{document}\n\\centering \\large{\\tt %s}\n", "feuille.tex");
+	float total_weight;
+	int nb;
+	for(nb=0;nb< graphe->vertices.nb_vertices;nb++)
+	{
+		total_weight+=(get_edge(graphe->edges, nb))->cost;
+		printf("Poids noeuds : %f\n", (get_edge(graphe->edges, nb))->cost);
+	}
+	fprintf(file, "\\begin{document}\n\\centering \\large{\\tt Edges sum : %f}\n", total_weight);
 	fprintf(file, "\\scalebox{%s}{\n%% BEGIN GRAPHE\n", SCALING);
 	
 	graphe_to_latex(graphe, file, func_to_latex);

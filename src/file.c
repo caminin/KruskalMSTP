@@ -115,7 +115,7 @@ Graphe* extractFile(char s[])
 			char **ligne1=str_split(text[i],' ');
 			int coord_x=atoi(ligne1[0]);
 			int coord_y=atoi(ligne1[1]);
-			long valeur=atof(ligne1[2]);
+			float valeur=atof(ligne1[2]);
 			
 			add_edge(&(graphe->edges), coord_x,coord_y, valeur,i-nb_noeuds-1);
 			free(ligne1);
