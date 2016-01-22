@@ -60,4 +60,14 @@ void swap(array_edges* ae, int i, int j)
 // 	ae->edges[j]->cost=temp.cost;
     }
 }
+
+void delete_edges(array_edges* ae)
+{
+    unsigned i;
+    for (i= 0; i < ae->nb_edges ; ++i){
+	free(get_edge(*ae, i));
+    }
+    free(ae->edges);
+}
+
     

@@ -28,5 +28,6 @@ void init_size_edges(array_edges*, unsigned size);
 void add_edge(array_edges*, int num_first, int num_second, float cost, unsigned pos);
 edge* get_edge(array_edges, unsigned pos);
 void display_edges(array_edges *my_edges,int nb_egdes);
+void delete_edges(array_edges* ae);
 
 #endif // EDGE_H

@@ -31,3 +31,12 @@ vertice* get_vertice(struct s_array_vertices av, unsigned pos){
 	return av.vertices[pos];
     else return NULL;
 }
+
+void delete_vertices(array_vertices* av)
+{
+    unsigned i;
+    for (i=0; i < av->nb_vertices; ++i){
+	free(get_vertice(*av, i));
+    }
+    free(av->vertices);
+}

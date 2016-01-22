@@ -1,15 +1,15 @@
 #include "latex.h"
 
 #define CIRCLE_RADIUS "1.0cm"
-#define COEF_SIZE 5
-#define SCALING "0.7"
+#define COEF_SIZE 1
+#define SCALING "0.25"
 
 char to_latex(array_vertices vertices, array_edges edges, FILE* file){
 // 	file= fopen(filename,"w");
 	
 	if (file != NULL)
 	{
-	    fprintf(file, "\\begin{pspicture*}(-1,-1)(15,15)\n");
+	    fprintf(file, "\\begin{pspicture*}(-1,-1)(55,55)\n");
 	    // Vertices export
 	    fprintf(file, "%% vertices\n");
 	    int i;

@@ -245,16 +245,19 @@ int main()
 /*** 	TESTS	 ***/
 
     /* Tests pour chargement fichier */
-    char chaine[]="DAVID_Florian.txt";
+    char chaine[]="./txtfiles/CHARLOT_Rodolphe.txt";
     Graphe* g= extractFile(chaine);
+    
     
 //     array_edges* mst_kruskal= kruskal(g);
 
     /* Tests pour création fichier LATEX */
-//     FILE* tex= fopen("feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
+    FILE* tex= fopen("feuille.tex", "w"); /*= to_latex(my_vertices, my_edges, "exemple_feuille.tex");*/
 //     to_latex_pdf(my_vertices, my_edges, tex);
+    to_latex_pdf(g->vertices, g->edges, tex);
     
-    
+    delete_edges(&(g->edges));
+    delete_vertices(&(g->vertices));
     free(g);
     
     return 0;
