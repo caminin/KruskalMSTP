@@ -1,4 +1,4 @@
-#include "latex.h"
+#include "../include/latex.h"
 
 #define CIRCLE_RADIUS "1.0cm"
 #define COEF_SIZE 1
