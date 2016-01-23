@@ -21,36 +21,40 @@ void vertices_to_latex(array_vertices* av, FILE* file)
     }
 }
 
-void edges_to_latex(array_edges* ae, FILE* file)
+void edges_to_latex(void* ae, void* file)
 {
+    array_edges* _ae=(array_edges*)ae;
+    FILE *_file=(FILE*)file;
     // Edges export
-    fprintf(file, "%% edges\n");
+    fprintf(_file, "%% edges\n");
     int i;
-    for (i= 0; i < ae->nb_edges; ++i){
-	edge* e= get_edge(*ae, i);
+    for (i= 0; i < _ae->nb_edges; ++i){
+	edge* e= get_edge(*_ae, i);
 	// Edges drawing TODO que fait le {-} ?
 	fprintf(file, "\\ncline{-}{%d}{%d}\n", e->first_v, e->second_v);
 	/// The cost of each edges is not displayed
     }
 }
 
-void red_edges_to_latex(array_edges* ae, FILE* file)
+void red_edges_to_latex(void* ae, void* file)
 {
     // Edges export
-    fprintf(file, "%% edges\n");
+    array_edges* _ae=(array_edges*)ae;
+    FILE *_file=(FILE*)file;
+    
+    fprintf(_file, "%% edges\n");
     int i;
-    for (i= 0; i < ae->nb_edges; ++i){
-	edge* e= get_edge(*ae, i);
+    for (i= 0; i < _ae->nb_edges; ++i){
+	edge* e= get_edge(*_ae, i);
 	// Edges drawing TODO que fait le {-} ?
 	fprintf(file, "\\ncline[linecolor=red,linewidth = 3pt]{-}{%d}{%d}\n", e->first_v, e->second_v);
 	/// The cost of each edges is not displayed
     }
 }
 
-char graphe_to_latex(Graphe* graphe, FILE* file, void (*func_to_latex)(array_edges* ae, FILE* file))
+char graphe_to_latex(Graphe* graphe, FILE* file, void (*func_to_latex)(void* _ae, void* _file))
 {
 // 	file= fopen(filename,"w");
-	
 	if (file != NULL)
 	{
 	    fprintf(file, "\\begin{pspicture*}(-1,-1)(55,55)\n");
@@ -73,7 +77,7 @@ char graphe_to_latex(Graphe* graphe, FILE* file, void (*func_to_latex)(array_edg
 }
 
 #define MARGE "2cm"
-void graphe_to_latex_pdf(Graphe* graphe, FILE* file, void (*func_to_latex)(Graphe*, FILE*))
+void graphe_to_latex_pdf(Graphe* graphe, FILE* file, void (*func_to_latex)(void* , void* ))
 {
 //     FILE* file= fopen(filename,"w");
     
