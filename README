@@ -1,0 +1,6 @@
+Commandes : 
+
+    Compilation :
+    - make florian -> commande pour compiler une version debug du programme 
+    - make release -> commande pour compiler une version release du programme
+    - ./bin/prog.exe -> exécuter le programme 

@@ -40,6 +40,25 @@ int main(int argc, char**argv)
     
     delete_vertices(&(g->vertices));
     free(g);
+    system("./bin/show_pdf.sh");
+#endif
+
+#ifdef RELEASE
+    char chaine[]="./txtfiles/DAVID_Florian.txt";
+    Graphe* g= extractFile(chaine);
+    
+    // LATEX
+    FILE* tex= fopen("./obj/feuille.tex", "w");
+    
+    array_edges* mst=kruskal(g);
+    
+    delete_edges(&(g->edges));
+    g->edges= *mst;
+    MST_to_latex_pdf(g, tex);
+    
+    delete_vertices(&(g->vertices));
+    free(g);
+    system("./bin/show_pdf_quiet.sh");
 #endif
     
 	return 0;
