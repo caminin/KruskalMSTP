@@ -30,3 +30,7 @@
 #Tex
 *.pdf
 *.tex
+*.aux
+*.dvi
+*.log
+*.ps
