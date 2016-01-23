@@ -9,7 +9,7 @@
 int main(int argc, char**argv)
 {
 #ifdef FLORIAN
-    char chaine[]="./txtfiles/RAYER_Ugo.txt";
+    char chaine[]="./txtfiles/DAVID_Florian.txt";
     Graphe* g= extractFile(chaine);
     
     // LATEX
@@ -23,6 +23,7 @@ int main(int argc, char**argv)
     
     delete_vertices(&(g->vertices));
     free(g);
+    system("./bin/show_pdf.sh");
 #endif
 
 #ifdef RODOLPHE
