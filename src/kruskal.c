@@ -37,7 +37,9 @@ array_edges* kruskal(Graphe *graphe)
 	
 	mysort(&(graphe->edges), nb_edges);
 	array_edges* mst=(array_edges*)malloc(sizeof(array_edges));
-	init_size_edges(mst, nb_edges-1);
+	// Number of edges initialized at the number of vertices -1
+	// (number of edges of the final mst)
+	init_size_edges(mst, nb_vertices-1);
 	int taille_mst=0;
 	int noeud_actuel=0;
 	subset mysubset[nb_vertices-1];

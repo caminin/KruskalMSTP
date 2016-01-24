@@ -8,17 +8,16 @@
 
 int main()
 {
-    char chaine[]="./txtfiles/RAYER_Ugo.txt";
-    Graphe* g= extractFile(chaine);
+    char filename[]="./txtfiles/DAVID_Florian.txt";
+    Graphe* g= extractFile(filename);
     
     // LATEX
-    FILE* tex= fopen("feuille.tex", "w");
     
     array_edges* mst=kruskal(g);
     
     delete_edges(&(g->edges));
     g->edges= *mst;
-    MST_to_latex_pdf(g, tex);
+    MST_to_latex_pdf(g, filename);
     
     delete_vertices(&(g->vertices));
     free(g);

@@ -69,7 +69,7 @@ char** str_split(char* a_str, const char a_delim)
 
 Graphe* extractFile(char s[])
 {
-	int taille=get_file_size(s);	
+	int size=get_file_size(s);	
 	FILE *fichier;
 	fichier=fopen(s,"r");
 	
@@ -77,17 +77,17 @@ Graphe* extractFile(char s[])
 	
 	if (fichier != NULL)
 	{		
-		char ** text=(char**)malloc(sizeof(char*)*taille);
+		char ** text=(char**)malloc(sizeof(char*)*size);
 		char ligne[30];
-		int num_ligne=0;
-		while(fgets(ligne, 30,fichier) != NULL)
+		int num_ligne;
+		for(num_ligne=0; fgets(ligne, 30,fichier) != NULL;
+		    ++num_ligne)
 		{
 			text[num_ligne]=(char*)malloc(sizeof(char)*(strlen(ligne)+1));
 			strcpy(text[num_ligne],ligne);
 #ifdef DEBUG
-			printf("DEBUG : num_ligne du fichier : %d/%d de valeur %s", num_ligne, taille ,text[num_ligne]);
+			printf("DEBUG : num_ligne du fichier : %d/%d de valeur %s", num_ligne, size ,text[num_ligne]);
 #endif
-			num_ligne++;
 		}
 		
 		char **ligne1=str_split(text[0],' ');
@@ -120,7 +120,11 @@ Graphe* extractFile(char s[])
 			add_edge(&(graphe->edges), coord_x,coord_y, valeur,i-nb_noeuds-1);
 			free(ligne1);
 		}
+		printf("\nNUMERO DE LIGNE A LA SORTIE : %d\n", num_ligne);
 		
+		for (i= 0; i < size; ++i){
+		    free(text[i]);
+		}
 		free(text);
 		fclose(fichier);
 #ifdef DEBUG
