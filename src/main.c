@@ -25,7 +25,7 @@ int main(int argc, char**argv)
     free(g);
     system("./bin/show_pdf.sh");
 #else
-    char* filename="./txtfiles/DAVID_Florian.txt";
+    char* filename="./CHARLOT_Rodolphe.txt";
     Graphe* g= extractFile(filename);
     full_graphe_to_latex_pdf(g, filename);
     
@@ -39,8 +39,8 @@ int main(int argc, char**argv)
     delete_edges(mst);
     free(mst);
     free(g);
-    system("./show_pdf_DAVID_Florian.sh");
 #endif
+    system("./show_pdf_CHARLOT_Rodolphe_quiet.sh");
     
 	return 0;
 }	
