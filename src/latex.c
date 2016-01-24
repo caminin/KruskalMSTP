@@ -121,7 +121,6 @@ void graphe_to_latex_pdf(Graphe* graphe, char* filename, void (*func_to_latex)(v
     token = strtok(tex_filename, s);
    
     /* Parcours de morceaux */
-//     char* tex_filename_to_display=(char*)malloc((strlen(tex_filename)+nb_underscore)*sizeof(char));
     char* tex_filename_to_display[strlen(tex_filename)+2];
     tex_filename_to_display[0]= '\0';
     
