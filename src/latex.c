@@ -9,51 +9,53 @@ void vertices_to_latex(array_vertices* av, FILE* file)
     fprintf(file, "%% vertices\n");
     int i;
     for (i= 0; i < av->nb_vertices; ++i){
-	vertice* v= get_vertice(*av, i);
-	// Positioning of the vertice
-	fprintf(file, "\\cnode(%d,%d)", COEF_SIZE * v->pos_x, COEF_SIZE *v->pos_y);
-	// Size and number of the vertice
-	fprintf(file, "{%s}{%d}", CIRCLE_RADIUS, i+1);
-	// TODO Number positioning
-	fprintf(file, "\\rput(%d,%d)", COEF_SIZE *v->pos_x, COEF_SIZE *v->pos_y);
-	// TODO Number display
-	fprintf(file, "{\\tt %d}\n", i+1);
+	    vertice* v= get_vertice(*av, i);
+	    // Positioning of the vertice
+	    fprintf(file, "\\cnode(%d,%d)", COEF_SIZE * v->pos_x, COEF_SIZE *v->pos_y);
+	    // Size and number of the vertice
+	    fprintf(file, "{%s}{%d}", CIRCLE_RADIUS, i+1);
+	    // TODO Number positioning
+	    fprintf(file, "\\rput(%d,%d)", COEF_SIZE *v->pos_x, COEF_SIZE *v->pos_y);
+	    // TODO Number display
+	    fprintf(file, "{\\tt %d}\n", i+1);
     }
 }
 
-void edges_to_latex(array_edges* ae, FILE* file)
+void edges_to_latex(void* ae, void* file)
 {
+    array_edges* _ae=(array_edges*)ae;
     // Edges export
     fprintf(file, "%% edges\n");
     int i;
-    for (i= 0; i < ae->nb_edges; ++i){
-	edge* e= get_edge(*ae, i);
-	// Edges drawing TODO que fait le {-} ?
-	fprintf(file, "\\ncline{-}{%d}{%d}\n", e->first_v, e->second_v);
-	/// The cost of each edges is not displayed
+    for (i= 0; i < _ae->nb_edges; ++i){
+	    edge* e= get_edge(*_ae, i);
+	    // Edges drawing
+	    fprintf(file, "\\ncline{-}{%d}{%d}\n", e->first_v, e->second_v);
+	    /// The cost of each edges is not displayed
     }
 }
 
-void red_edges_to_latex(array_edges* ae, FILE* file)
+void red_edges_to_latex(void* ae, void* file)
 {
+    array_edges* _ae= ae;
     // Edges export
     fprintf(file, "%% edges of MST\n");
-    int i;
 // #ifdef DEBUG
-    printf("Nb_edges : %d", ae->nb_edges);
+    printf("Nb_edges : %d", _ae->nb_edges);
 // #endif
-    for (i= 0; i < ae->nb_edges; ++i){
-	edge* e= get_edge(*ae, i);
-	// Edges drawing TODO que fait le {-} ?
+    int i;
+    for (i= 0; i < _ae->nb_edges; ++i){
+	edge* e= get_edge(*_ae, i);
+
+	// Edges drawing
 	fprintf(file, "\\ncline[linecolor=red,linewidth = 3pt]{-}{%d}{%d}\n", e->first_v, e->second_v);
 	/// The cost of each edges is not displayed
     }
 }
 
-char graphe_to_latex(Graphe* graphe, FILE* file, void (*func_to_latex)(array_edges* ae, FILE* file))
+char graphe_to_latex(Graphe* graphe, FILE* file, void (*func_to_latex)(void* _ae, void* _file))
 {
 // 	file= fopen(filename,"w");
-	
 	if (file != NULL)
 	{
 	    fprintf(file, "\\begin{pspicture*}(-1,-1)(55,55)\n");
@@ -76,7 +78,7 @@ char graphe_to_latex(Graphe* graphe, FILE* file, void (*func_to_latex)(array_edg
 }
 
 #define MARGE "2cm"
-void graphe_to_latex_pdf(Graphe* graphe, char* filename, void (*func_to_latex)(Graphe*, FILE*))
+void graphe_to_latex_pdf(Graphe* graphe, char* filename, void (*func_to_latex)(void*, void*))
 {
     // Replace extension by .tex
     int name_size= strlen(filename);
@@ -144,28 +146,29 @@ void graphe_to_latex_pdf(Graphe* graphe, char* filename, void (*func_to_latex)(G
 	fprintf(file, "\n\\usepackage[top=%s, bottom=%s, left=%s, right=%s]{geometry}\n", MARGE, MARGE, MARGE, MARGE);
 	fprintf(file, "\\usepackage{graphics}\n");
 	
-	// TODO voir comment mettre le nom du fichier LATEX
 	float total_weight;
 	int nb;
 	for(nb=0;nb< graphe->edges.nb_edges;nb++)
 	{
 		total_weight+=(get_edge(graphe->edges, nb))->cost;
-		printf("Poids noeuds : %f\n", (get_edge(graphe->edges, nb))->cost);
+	    #ifdef DEBUG
+		printf("Weight edges : %f\n", (get_edge(graphe->edges, nb))->cost);
+	    #endif
 	}
 	fprintf(file, "\\begin{document}\n\\centering \\large{\\tt %s\nEdges sum : %f}\n",tex_filename_to_display, total_weight);
 	fprintf(file, "\\scalebox{%s}{\n%% BEGIN GRAPHE\n", SCALING);
 	
 	graphe_to_latex(graphe, file, func_to_latex);
-	
+    
 	fprintf(file, "\n}%% END GRAPHE\n\n\\end{document}");
-	
+    
 	// File closed
 	fclose(file);
     }
     else
     {
-	// On affiche un message d'erreur
-	printf("Impossible to create the output LATEX file\n");
+	    // On affiche un message d'erreur
+	    printf("Impossible to create the output LATEX file\n");
     }
 }
 
@@ -178,5 +181,6 @@ void MST_to_latex_pdf(Graphe* g_mst, char* filename)
 {
     graphe_to_latex_pdf(g_mst, filename, red_edges_to_latex);
 }
+
 
 

@@ -31,7 +31,8 @@ debug: LDFLAGS += -g
 debug: all
 
 release: CFLAGS += -O2
-release: all
+release: CFLAGS += -DRELEASE
+release: clean all
 
 all: $(TARGET)
 

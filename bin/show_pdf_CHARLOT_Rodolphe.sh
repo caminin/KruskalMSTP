@@ -1,13 +1,12 @@
 #!/bin/sh
 LATEX_NAME="G.CHARLOT_Rodolphe"
 
-echo "nom du fichier : "/LATEX_NAME
+echo "nom du fichier : "LATEX_NAME
 
-latex $LATEX_NAME.tex
-dvips $LATEX_NAME.dvi
-ps2pdf $LATEX_NAME.ps
-evince $LATEX_NAME.pdf
+mkdir obj
 
-rm $LATEX_NAME.aux
-rm $LATEX_NAME.log
-rm $LATEX_NAME.dvi
+latex -output-directory=./obj/ $LATEX_NAME.tex -output-format=pdf
+dvips -q ./obj/$LATEX_NAME.dvi -o ./obj/$LATEX_NAME.ps
+ps2pdf ./obj/$LATEX_NAME.ps ./obj/$LATEX_NAME.pdf
+evince ./obj/$LATEX_NAME.pdf
+

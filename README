@@ -1,0 +1,13 @@
+Commandes : 
+
+    Compilation :
+    - make florian -> commande pour compiler une version debug du programme 
+    - make release -> commande pour compiler une version release du programme
+    - ./bin/prog.exe -> exécuter le programme 
+    
+    
+Le programme récupère le fichier graĉe à ...
+Il le charge en mémoire dans les structures edges et vectorials
+Il applique ensuite l'algorithme de kruskal
+Il récupère le mst généré, calcul son poids puis génère un fichier latex pour l'afficher
+Il exécute ensuite un script permettant de générer un pdf à partir du latex utilisant latex, dvips, ps2pdf, evince

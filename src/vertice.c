@@ -17,14 +17,16 @@ void init_size_vertices(struct s_array_vertices* av, int size)
 void add_vertice(struct s_array_vertices* av, int x, int y, int pos)
 {
     if (pos < av->nb_vertices){
-	printf("DEBUG : Sommet ajouté en position %u\n", pos);
-	vertice* new_vertice= (vertice*)malloc(sizeof(vertice));
-	new_vertice->pos_x = x;
-	new_vertice->pos_y = y;
-	av->vertices[pos]= new_vertice;
+#ifdef DEBUG
+	    printf("DEBUG : Sommet ajouté en position %u\n", pos);
+#endif
+	    vertice* new_vertice= (vertice*)malloc(sizeof(vertice));
+	    new_vertice->pos_x = x;
+	    new_vertice->pos_y = y;
+	    av->vertices[pos]= new_vertice;
     }
     else {
-	printf("ERROR : Position d'ajout du sommet supérieure au nombre d'éléments\n");
+	    printf("ERROR : Position d'ajout du sommet supérieure au nombre d'éléments\n");
     }
 }
 

@@ -14,13 +14,14 @@
 
 // Vertices export in LATEX
 void vertices_to_latex(array_vertices*, FILE*);
-void edges_to_latex(array_edges*, FILE*);
-void red_edges_to_latex(array_edges*, FILE*);
+void edges_to_latex(void* ae, void* file);
+void red_edges_to_latex(void* ae, void* file);
 
-char graphe_to_latex(Graphe* graphe, FILE* file, void(*func_to_latex)(array_edges*, FILE*));
+char graphe_to_latex(Graphe* graphe, FILE* file, void (*func_to_latex)(void*, void*));
 
-void graphe_to_latex_pdf(Graphe* graphe, char* filename, void (*edges_to_latex_func)(Graphe* , FILE* ));
+void graphe_to_latex_pdf(Graphe* graphe, char* filename, void (*edges_to_latex_func)(void* , void* ));
 void full_graphe_to_latex_pdf(Graphe* graphe, char* filename);
+
 void MST_to_latex_pdf(Graphe* g_mst, char* filename);
 
 #endif

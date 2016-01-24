@@ -16,7 +16,9 @@ void add_edge(array_edges* ae, int num_first, int num_second, float cost, int po
 {
     if (pos < ae->nb_edges)
     {
+#ifdef DEBUG
 	    printf("DEBUG : Arc ajouté en position %u\n", pos);
+#endif
 	    edge* new_edge= (edge*)malloc(sizeof(edge));
 	    new_edge->first_v = num_first;
 	    new_edge->second_v = num_second;
