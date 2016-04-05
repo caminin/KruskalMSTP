@@ -8,24 +8,7 @@
 
 int main(int argc, char**argv)
 {
-#ifdef RODOLPHE
-	char chaine[]="./txtfiles/TROYSI_Morgane.txt";
-    Graphe* g= extractFile(chaine);
-    
-    // LATEX
-    FILE* tex= fopen("./obj/feuille.tex", "w");
-    
-    array_edges* mst=kruskal(g);
-    
-    delete_edges(&(g->edges));
-    g->edges= *mst;
-    MST_to_latex_pdf(g, tex);
-    
-    delete_vertices(&(g->vertices));
-    free(g);
-    system("./bin/show_pdf.sh");
-#else
-    char* filename="./CHARLOT_Rodolphe.txt";
+    char* filename="./DAVID_Florian.txt";
     Graphe* g= extractFile(filename);
     full_graphe_to_latex_pdf(g, filename);
     
@@ -39,8 +22,6 @@ int main(int argc, char**argv)
     delete_edges(mst);
     free(mst);
     free(g);
-#endif
-    system("./show_pdf_CHARLOT_Rodolphe_quiet.sh");
     
-	return 0;
+    return 0;
 }	

@@ -1,4 +1,4 @@
-#include "../include/kruskal.h"
+file:///home/florian/git/KruskalMSTP/src/file.cfile:///home/florian/git/KruskalMSTP/src/edge.cfile:///home/florian/git/KruskalMSTP/src/vertice.c#include "../include/kruskal.h"
 
 int path_compression(subset mysubset[],int i)
 {

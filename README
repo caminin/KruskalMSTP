@@ -3,10 +3,11 @@ Commandes :
     Compilation :
     - make florian -> commande pour compiler une version debug du programme 
     - make release -> commande pour compiler une version release du programme
-    - ./bin/prog.exe -> exécuter le programme 
+    - Exéctuable dans le dossier bin
+	- Pour afficher le pdf, on clic sur show_pdf_[nom_binome].sh, le script convertit le .tex crée en .pdf
+
+Le fichier texte utilisé pour la lecture est défini dans main.c , fonction main().
     
-    
-Le programme récupère le fichier graĉe à ...
 Il le charge en mémoire dans les structures edges et vectorials
 Il applique ensuite l'algorithme de kruskal
 Il récupère le mst généré, calcul son poids puis génère un fichier latex pour l'afficher
